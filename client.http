@@ -29,3 +29,8 @@ Content-Type: application/json
 POST {{baseurl}}/questions
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+{
+  "title": "How to create a new account?",
+  "content": "I need to create a new account, but I don't know how to do it."
+}
