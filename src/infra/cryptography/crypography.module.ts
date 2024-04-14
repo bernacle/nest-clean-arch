@@ -8,8 +8,8 @@ import { HashGenerator } from '@/domain/forum/application/cryptography/hash-gene
 @Module({
   providers: [
     { provide: Encrypter, useClass: JwtEncrypter },
-    { provide: HashComparer, useValue: BcryptHasher },
-    { provide: HashGenerator, useValue: BcryptHasher },
+    { provide: HashComparer, useClass: BcryptHasher },
+    { provide: HashGenerator, useClass: BcryptHasher },
   ],
   exports: [Encrypter, HashComparer, HashGenerator],
 })

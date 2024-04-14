@@ -1,4 +1,4 @@
-import { StudentRepository } from '../repositories/students-repository'
+import { StudentsRepository } from '../repositories/students-repository'
 import { Either, left, right } from '@/core/either'
 import { Injectable } from '@nestjs/common'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
@@ -18,7 +18,7 @@ type AuthenticateStudentUseCaseResponse = Either<
 @Injectable()
 export class AuthenticateStudentUseCase {
   constructor(
-    private studentsRepository: StudentRepository,
+    private studentsRepository: StudentsRepository,
     private hashComparer: HashComparer,
     private encrypter: Encrypter,
   ) {}
