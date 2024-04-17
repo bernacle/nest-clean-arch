@@ -11,12 +11,12 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { AnswerQuestionUseCase } from '@/domain/forum/application/use-cases/answer-question'
 
-const AnswerQuestionBodySchema = z.object({
+const answerQuestionBodySchema = z.object({
   content: z.string(),
 })
-const bodyValidationPipe = new ZodValidationPipe(AnswerQuestionBodySchema)
+const bodyValidationPipe = new ZodValidationPipe(answerQuestionBodySchema)
 
-type AnswerQuestionBodySchema = z.infer<typeof AnswerQuestionBodySchema>
+type AnswerQuestionBodySchema = z.infer<typeof answerQuestionBodySchema>
 
 @Controller('/questions/:questionId/answers')
 export class AnswerQuestionController {
