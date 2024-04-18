@@ -30,16 +30,19 @@ export class AnswerQuestionController {
   ) {
     const { content } = body
     const { sub: userId } = user
+    try {
+      const result = await this.answerQuestion.execute({
+        content,
+        questionId,
+        authorId: userId,
+        attachmentsIds: [],
+      })
 
-    const result = await this.answerQuestion.execute({
-      content,
-      questionId,
-      authorId: userId,
-      attachmentsIds: [],
-    })
-
-    if (result.isLeft()) {
-      throw new BadRequestException()
+      if (result.isLeft()) {
+        throw new BadRequestException()
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 }

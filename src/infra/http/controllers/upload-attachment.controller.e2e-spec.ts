@@ -4,48 +4,36 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
-import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
-describe('GetQuestionBySlug (E2E)', () => {
+describe('UploadAttachment (E2E)', () => {
   let app: INestApplication
   let jwt: JwtService
   let studentFactory: StudentFactory
-  let questionFactory: QuestionFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory],
+      providers: [StudentFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
     studentFactory = moduleRef.get(StudentFactory)
-    questionFactory = moduleRef.get(QuestionFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
 
-  test('[GET] /questions/:slug', async () => {
+  test('[POST] /attachments', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    await questionFactory.makePrismaQuestion({
-      authorId: user.id,
-      title: 'Question 1',
-    })
-
     const response = await request(app.getHttpServer())
-      .get(`/questions/question-1`)
+      .post('/attachments')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .attach('file', './test/e2e/sample-upload.jpg')
 
-    expect(response.status).toBe(200)
-
-    expect(response.body).toEqual({
-      question: expect.objectContaining({ title: 'Question 1' }),
-    })
+    expect(response.status).toBe(201)
   })
 })
