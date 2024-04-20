@@ -6,8 +6,8 @@ export const envSchema = z.object({
   JWT_PUBLIC_KEY: z.string(),
   PORT: z.coerce.number().optional().default(3333),
   CLOUDFLARE_ACCOUNT_ID: z.string(),
-  AWS_ACCESS_KEY_ID: z.string(),
-  AWS_SECRET_ACCESS_KEY: z.string(),
+  AWS_ACCESS_KEY_ID_NEST: z.string(),
+  AWS_SECRET_ACCESS_KEY_NEST: z.string(),
   AWS_BUCKET_NAME: z.string(),
 })
 
