@@ -41,7 +41,7 @@ describe('Prisma Questions Repository (E2E)', () => {
     await app.init()
   })
 
-  test('it should cache questions details', async () => {
+  it('should cache questions details', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const question = await questionFactory.makePrismaQuestion({
@@ -62,5 +62,59 @@ describe('Prisma Questions Repository (E2E)', () => {
     const cached = await cacheRepository.get(`question:${slug}:details`)
 
     expect(cached).toEqual(JSON.stringify(questionDetails))
+  })
+
+  it('should return cached questions on subsequent calls', async () => {
+    const user = await studentFactory.makePrismaStudent()
+
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+    })
+
+    const attachment = await attachmentFactory.makePrismaAttachment()
+
+    await questionAttachmentFactory.makePrismaQuestionAttachment({
+      questionId: question.id,
+      attachmentId: attachment.id,
+    })
+
+    const slug = question.slug.value
+
+    await cacheRepository.set(
+      `question:${slug}:details`,
+      JSON.stringify({ empty: true }),
+    )
+
+    const questionDetails = await questionsRepository.findDetailsBySlug(slug)
+
+    expect(questionDetails).toEqual({ empty: true })
+  })
+
+  it('should reset question details cache when saving the question', async () => {
+    const user = await studentFactory.makePrismaStudent()
+
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+    })
+
+    const attachment = await attachmentFactory.makePrismaAttachment()
+
+    await questionAttachmentFactory.makePrismaQuestionAttachment({
+      questionId: question.id,
+      attachmentId: attachment.id,
+    })
+
+    const slug = question.slug.value
+
+    await cacheRepository.set(
+      `question:${slug}:details`,
+      JSON.stringify({ empty: true }),
+    )
+
+    await questionsRepository.save(question)
+
+    const cached = await cacheRepository.get(`question:${slug}:details`)
+
+    expect(cached).toBeNull()
   })
 })
