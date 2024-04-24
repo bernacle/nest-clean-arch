@@ -13,7 +13,7 @@ type ReadNotificationUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   { notification: Notification }
 >
-Injectable()
+@Injectable()
 export class ReadNotificationUseCase {
   constructor(private notificationsRepository: NotificationsRepository) {}
 
